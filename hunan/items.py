@@ -16,6 +16,7 @@ class xxgkItem(scrapy.Item):
     organization = Field()                 # 所属机构
     department = Field()                   # 公开责任部门
     pubscope = Field()                     # 公开范围
+    exposeway = Field()                    # 公开方式
     name = Field()                         # 姓名
     duty = Field()                         # 职务
     work = Field()                         # 工作职责
