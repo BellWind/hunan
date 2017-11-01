@@ -41,39 +41,34 @@ class XxgkSpider(scrapy.Spider):
     def parseInfo(self, response):
         sel = Selector(response)
         con = sel.xpath('//body/div/div/div/div/div/div[2]/div/ul/li')
-        if(con != None):
-            item = xxgkItem()
+        item = xxgkItem()
 
-            item['index'] = con[0].xpath('text()').extract_first()
-            if(item['index'] != None): item['index'] = item['index'].strip()
+        item['index'] = self.normalWord(con[0].xpath('text()').extract_first())
 
-            item['org'] = con[1].xpath('text()').extract_first()
-            if (item['org'] != None): item['org'] = item['org'].strip()
+        item['org'] = self.normalWord(con[1].xpath('text()').extract_first())
 
-            item['dep'] = con[2].xpath('text()').extract_first()
-            if (item['dep'] != None): item['dep'] = item['dep'].strip()
+        item['dep'] = self.normalWord(con[2].xpath('text()').extract_first())
 
-            item['name'] = con[4].xpath('text()').extract_first()
-            if (item['name'] != None): item['name'] = item['name'].strip()
+        item['name'] = self.normalWord(con[4].xpath('text()').extract_first())
 
-            item['exp'] = con[5].xpath('text()').extract_first()
-            if (item['exp'] != None): item['exp'] = item['exp'].strip()
+        item['exp'] = self.normalWord(con[5].xpath('text()').extract_first())
 
-            item['pub'] = con[6].xpath('text()').extract_first()
-            if (item['pub'] != None): item['pub'] = item['pub'].strip()
 
-            con = sel.xpath('//*[@id="div_content"]/div[2]/table/tr')
-            item['duty'] = con[1].xpath('td[2]/text()').extract_first()
-            if (item['duty'] != None): item['duty'] = item['duty'].strip()
+        item['pub'] = self.normalWord(con[6].xpath('text()').extract_first())
 
-            item['work'] = con[2].xpath('td[2]/text()').extract_first()
-            if (item['work'] != None): item['work'] = item['work'].strip()
+        con = sel.xpath('//*[@id="div_content"]/div[2]/table/tr')
+        item['duty'] = self.normalWord(con[1].xpath('td[2]/text()').extract_first())
 
-            con = sel.xpath('//*[@id="div_content"]/div[2]/table/tr/td[2]')
-            item['intro'] = con[3].xpath('string(.)').extract_first()
-            if (item['intro'] != None): item['intro'] = item['intro'].strip()
+        item['work'] = self.normalWord(con[2].xpath('td[2]/text()').extract_first())
 
-            item['resume'] = con[4].xpath('string(.)').extract_first()
-            if (item['resume'] != None): item['resume'] = item['resume'].strip()
+        con = sel.xpath('//*[@id="div_content"]/div[2]/table/tr/td[2]')
+        item['intro'] = self.normalWord(con[3].xpath('string(.)').extract_first())
 
-            return item
+        item['resume'] = self.normalWord(con[4].xpath('string(.)').extract_first())
+
+        return item
+
+    def normalWord(self, str):
+        if(str != None):
+            str = ''.join(str.split())
+        return str

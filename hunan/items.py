@@ -13,10 +13,10 @@ class HunanItem(scrapy.Item):
 
 class xxgkItem(scrapy.Item):
     index = Field()                        # 索引号
-    org = Field()                 # 所属机构
-    dep = Field()                   # 公开责任部门
-    pub = Field()                     # 公开范围
-    exp = Field()                    # 公开方式
+    org = Field()                          # 所属机构
+    dep = Field()                          # 公开责任部门
+    pub = Field()                          # 公开范围
+    exp = Field()                          # 公开方式
     name = Field()                         # 姓名
     duty = Field()                         # 职务
     work = Field()                         # 工作职责
