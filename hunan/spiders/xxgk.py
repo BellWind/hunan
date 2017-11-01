@@ -4,7 +4,10 @@ import re
 from scrapy.selector import Selector
 from scrapy import Request
 from hunan.items import xxgkItem
-import json
+
+import sys
+reload(sys)
+sys.setdefaultencoding( "utf-8" )
 
 class XxgkSpider(scrapy.Spider):
     name = 'xxgk'
@@ -38,21 +41,39 @@ class XxgkSpider(scrapy.Spider):
     def parseInfo(self, response):
         sel = Selector(response)
         con = sel.xpath('//body/div/div/div/div/div/div[2]/div/ul/li')
-        item = xxgkItem()
-        item['index'] = con[0].xpath('text()').extract_first()
-        item['organization'] = con[1].xpath('text()').extract_first()
-        item['department'] = con[2].xpath('text()').extract_first()
-        item['name'] = con[4].xpath('text()').extract_first()
-        item['exposeway'] = con[5].xpath('text()').extract_first()
-        item['pubscope'] = con[6].xpath('text()').extract_first()
-        # con = sel.xpath('//*[@id="div_content"]/div[2]/table//tr')
-        # item['duty'] = con[2].xpath('td[2]/text()').extract_first()
-        # item['work'] =  con[3].xpath('/td[2]/p/text()').extract_first()
-        # item['resume'] = con[4].xpath('/td[2]/div/span/p/text()').extract_first()
-        # print json.dumps(item, ensure_ascii = False)
+        if(con != None):
+            item = xxgkItem()
 
-        # file = open('区/{0}.txt'.format('tmp'), 'a')
-        # file.write(item)
-        # print item['organization']
-        # print item
-        return item
+            item['index'] = con[0].xpath('text()').extract_first()
+            if(item['index'] != None): item['index'] = item['index'].strip()
+
+            item['org'] = con[1].xpath('text()').extract_first()
+            if (item['org'] != None): item['org'] = item['org'].strip()
+
+            item['dep'] = con[2].xpath('text()').extract_first()
+            if (item['dep'] != None): item['dep'] = item['dep'].strip()
+
+            item['name'] = con[4].xpath('text()').extract_first()
+            if (item['name'] != None): item['name'] = item['name'].strip()
+
+            item['exp'] = con[5].xpath('text()').extract_first()
+            if (item['exp'] != None): item['exp'] = item['exp'].strip()
+
+            item['pub'] = con[6].xpath('text()').extract_first()
+            if (item['pub'] != None): item['pub'] = item['pub'].strip()
+
+            con = sel.xpath('//*[@id="div_content"]/div[2]/table/tr')
+            item['duty'] = con[1].xpath('td[2]/text()').extract_first()
+            if (item['duty'] != None): item['duty'] = item['duty'].strip()
+
+            item['work'] = con[2].xpath('td[2]/text()').extract_first()
+            if (item['work'] != None): item['work'] = item['work'].strip()
+
+            con = sel.xpath('//*[@id="div_content"]/div[2]/table/tr/td[2]')
+            item['intro'] = con[3].xpath('string(.)').extract_first()
+            if (item['intro'] != None): item['intro'] = item['intro'].strip()
+
+            item['resume'] = con[4].xpath('string(.)').extract_first()
+            if (item['resume'] != None): item['resume'] = item['resume'].strip()
+
+            return item
