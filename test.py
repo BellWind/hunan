@@ -53,26 +53,15 @@ def JsonToTable():
                 tmp = json.loads(str, strict=False)
                 data.append(tmp)
 
-        cnt = 163
-        sql = "\r\n"
-        # for item in data:
-        item = data[163]
-        sql = sql + "INSERT INTO testdb(`code`,`index`,`name`,`profile`,`organization`,`position`) VALUES "
-        sql = sql + "('%s','%04d','%s','%s','%s','%s');\r\n" % ('430000',cnt,item['name'],item['resume'],item['dep'],item['duty'])
-        cnt = cnt + 1
-        print sql
-        cur.execute(sql)
-        cur.nextset()
-        print "############"
-
-        item = data[164]
-        sql = sql + "INSERT INTO testdb(`code`,`index`,`name`,`profile`,`organization`,`position`) VALUES "
-        sql = sql + "('%s','%04d','%s','%s','%s','%s');\r\n" % ('430000', cnt, item['name'], item['resume'], item['dep'], item['duty'])
-        cnt = cnt + 1
-        print sql
-        cur.execute(sql)
-        cur.nextset()
-        print "############"
+        cnt = 2
+        id = 1
+        for item in data:
+            sql = "INSERT INTO officer(`id`,`code`,`index`,`name`,`profile`,`organization`,`position`) VALUES "
+            sql = sql + "('%d','%s','%04d','%s','%s','%s','%s');\r\n" % (id,'430000',cnt,item['name'],item['resume'],item['dep'],item['duty'])
+            cnt = cnt + 1
+            id = id + 1
+            cur.execute(sql)
+            cur.nextset()
 
         cur.close()
         conn.commit()
