@@ -28,5 +28,5 @@ def upload_qiniu(image_tag):
     image_url = 'http://ozwyjb3op.bkt.clouddn.com/%s.jps' % image_tag
 
 if __name__ == "__main__":
-	upload_qiniu("430000_0780")
+	upload_qiniu("430100_0791")
 
