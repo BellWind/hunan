@@ -43,7 +43,7 @@ def JsonToTable():
         cur = conn.cursor()
 
         data = []
-        with open('xxgk.json') as f:
+        with open('bmlds.json') as f:
             for line in f:
                 if(line[0] != "{"):
                     continue
@@ -53,12 +53,10 @@ def JsonToTable():
                 tmp = json.loads(str, strict=False)
                 data.append(tmp)
 
-        cnt = 2
-        id = 1
+        id = 791
         for item in data:
-            sql = "INSERT INTO officer(`id`,`code`,`index`,`name`,`profile`,`organization`,`position`) VALUES "
-            sql = sql + "('%d','%s','%04d','%s','%s','%s','%s');\r\n" % (id,'430000',cnt,item['name'],item['resume'],item['dep'],item['duty'])
-            cnt = cnt + 1
+            sql = "INSERT INTO officer(`id`,`code`,`index`,`name`,`image_url`,`profile`,`organization`,`position`) VALUES "
+            sql = sql + "('%d','%s','%s','%s','%s','%s','%s','%s');\r\n" % (id,'410000',item['index'],item['name'],item['image'],item['profile'],item['organization'],item['position'])
             id = id + 1
             cur.execute(sql)
             cur.nextset()
