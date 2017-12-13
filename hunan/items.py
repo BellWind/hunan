@@ -23,3 +23,14 @@ class xxgkItem(scrapy.Item):
     intro = Field()                        # 个人简介
     resume = Field()                       # 工作简历
 
+class csItem(scrapy.Item):
+    id = Field()
+    index = Field()  # 索引号
+    org = Field()  # 所属机构
+    dep = Field()  # 公开责任部门
+    pub = Field()  # 公开范围
+    exp = Field()  # 公开方式
+    name = Field()  # 姓名
+    duty = Field()  # 职务
+    work = Field()  # 工作职责
+    resume = Field()  # 工作简历

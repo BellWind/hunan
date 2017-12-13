@@ -7,12 +7,13 @@ import urllib
 import sys
 reload(sys)
 sys.setdefaultencoding( "utf-8" )
-
+from hunan.items import csItem
 
 class CsxxgkSpider(scrapy.Spider):
     name = 'csxxgk'
     # allowed_domains = ['www.changsha.gov.cn']
     start_urls = ['http://www.changsha.gov.cn/xxgk/szfxxgkml/#chnl227']
+    cnt = 12
 
     def parse(self, response):
         sel = Selector(response)
@@ -36,15 +37,43 @@ class CsxxgkSpider(scrapy.Spider):
 
     def parse4(self, response):
         sel = Selector(response)
-        path = '//img/@src'
-        pattern = re.compile('http://www.changsha.gov.cn/xxgk/.*/', re.S)
-        head = re.findall(pattern, response.url)[0]
-        tail = sel.xpath(path).extract_first().lstrip('./')
-        img_url = head + tail
-        dir_path = "phototest/" + tail
-        with open(dir_path, 'wb') as file_writer:
-            conn = urllib.urlopen(img_url)  # 下载图片
-            file_writer.write(conn.read())
-        file_writer.close()
+
+        # # 下载图片
+        # path = '//img/@src'
+        # pattern = re.compile('http://www.changsha.gov.cn/xxgk/.*/', re.S)
+        # head = re.findall(pattern, response.url)[0]
+        # tail = sel.xpath(path).extract_first().lstrip('./')
+        # img_url = head + tail
+        # dir_path = "phototest/430100_" + ('%04d') % (self.cnt) + ".jpg"
+        # with open(dir_path, 'wb') as file_writer:
+        #     conn = urllib.urlopen(img_url)
+        #     file_writer.write(conn.read())
+        # file_writer.close()
+
+        item = csItem()
+        item['id'] = ('%04d') % (self.cnt)
+        item['index'] = sel.xpath('/html/body/div[2]/div/div[2]/div/div/div[1]/ul/li[1]/text()').extract_first()
+        item['org'] = sel.xpath('/html/body/div[2]/div/div[2]/div/div/div[1]/ul/li[2]/text()').extract_first()
+        item['dep'] = sel.xpath('/html/body/div[2]/div/div[2]/div/div/div[1]/ul/li[3]/text()').extract_first()
+        item['exp'] = sel.xpath('/html/body/div[2]/div/div[2]/div/div/div[1]/ul/li[6]/text()').extract_first()
+        item['pub'] = sel.xpath('/html/body/div[2]/div/div[2]/div/div/div[1]/ul/li[7]/text()').extract_first()
+        item['name'] = sel.xpath('//*[@id="docContent_detail"]//tr[1]/td[3]/text()').extract_first()
+        item['duty'] = sel.xpath('//*[@id="docContent_detail"]//tr[2]/td[2]/text()').extract_first()
+        item['work'] = sel.xpath('//*[@id="docContent_detail"]//tr[3]/td[2]/text()').extract_first()
+
+        tmp = sel.xpath('//*[@id="docContent_detail"]//tr[4]/td[2]')
+        item['resume'] = tmp.xpath('string(.)').extract_first()
+
+        print item['resume']
+
+
+        self.cnt += 1
+        return item
+
+    def normalWord(self, str):
+        if(str != None):
+            str = ''.join(str.split())
+        return str
+
 
 
