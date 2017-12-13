@@ -3,4 +3,4 @@
 from scrapy import cmdline
 
 # cmdline.execute("scrapy crawl xxgk -o xxgk.json -t json".split())
-cmdline.execute("scrapy crawl csxxgk".split())
+cmdline.execute("scrapy crawl csxxgk -o csxxgk.json -t json".split())

@@ -18,8 +18,12 @@ class CsxxgkSpider(scrapy.Spider):
     def parse(self, response):
         sel = Selector(response)
         head = "http://www.changsha.gov.cn/xxgk/"
-        url = head + sel.xpath("/html/body/div[2]/div/div[2]/div/div[3]/div[1]/ul/li[2]/dl[1]/dt/span/a[1]/@href").extract_first().lstrip('../')
-        yield Request(url, callback=self.parse2)
+        # url = head + sel.xpath("/html/body/div[2]/div/div[2]/div/div[3]/div[1]/ul/li[2]/dl[1]/dt/span/a[1]/@href").extract_first().lstrip('../')
+
+        sites = sel.xpath('//*[@class="deptpubItem"]/a[1]/@href').extract()
+        for site in sites:
+            url = head + site.lstrip('../')
+            yield Request(url, callback=self.parse2)
 
     def parse2(self, response):
         sel = Selector(response)
@@ -38,34 +42,33 @@ class CsxxgkSpider(scrapy.Spider):
     def parse4(self, response):
         sel = Selector(response)
 
-        # # 下载图片
-        # path = '//img/@src'
-        # pattern = re.compile('http://www.changsha.gov.cn/xxgk/.*/', re.S)
-        # head = re.findall(pattern, response.url)[0]
-        # tail = sel.xpath(path).extract_first().lstrip('./')
-        # img_url = head + tail
-        # dir_path = "phototest/430100_" + ('%04d') % (self.cnt) + ".jpg"
-        # with open(dir_path, 'wb') as file_writer:
-        #     conn = urllib.urlopen(img_url)
-        #     file_writer.write(conn.read())
-        # file_writer.close()
+        # 下载图片
+        path = '//img/@src'
+        pattern = re.compile('http://www.changsha.gov.cn/xxgk/.*/', re.S)
+        head = re.findall(pattern, response.url)[0]
+        tail = sel.xpath(path).extract_first().lstrip('./')
+        img_url = head + tail
+        dir_path = "photos/430100_" + ('%04d') % (self.cnt) + ".jpg"
+        with open(dir_path, 'wb') as file_writer:
+            conn = urllib.urlopen(img_url)
+            file_writer.write(conn.read())
+        file_writer.close()
 
         item = csItem()
         item['id'] = ('%04d') % (self.cnt)
-        item['index'] = sel.xpath('/html/body/div[2]/div/div[2]/div/div/div[1]/ul/li[1]/text()').extract_first()
-        item['org'] = sel.xpath('/html/body/div[2]/div/div[2]/div/div/div[1]/ul/li[2]/text()').extract_first()
-        item['dep'] = sel.xpath('/html/body/div[2]/div/div[2]/div/div/div[1]/ul/li[3]/text()').extract_first()
-        item['exp'] = sel.xpath('/html/body/div[2]/div/div[2]/div/div/div[1]/ul/li[6]/text()').extract_first()
-        item['pub'] = sel.xpath('/html/body/div[2]/div/div[2]/div/div/div[1]/ul/li[7]/text()').extract_first()
-        item['name'] = sel.xpath('//*[@id="docContent_detail"]//tr[1]/td[3]/text()').extract_first()
-        item['duty'] = sel.xpath('//*[@id="docContent_detail"]//tr[2]/td[2]/text()').extract_first()
-        item['work'] = sel.xpath('//*[@id="docContent_detail"]//tr[3]/td[2]/text()').extract_first()
+        item['index'] = self.normalWord(sel.xpath('/html/body/div[2]/div/div[2]/div/div/div[1]/ul/li[1]/text()').extract_first())
+        item['org'] = self.normalWord(sel.xpath('/html/body/div[2]/div/div[2]/div/div/div[1]/ul/li[2]/text()').extract_first())
+        item['dep'] = self.normalWord(sel.xpath('/html/body/div[2]/div/div[2]/div/div/div[1]/ul/li[3]/text()').extract_first())
+        item['exp'] = self.normalWord(sel.xpath('/html/body/div[2]/div/div[2]/div/div/div[1]/ul/li[6]/text()').extract_first())
+        item['pub'] = self.normalWord(sel.xpath('/html/body/div[2]/div/div[2]/div/div/div[1]/ul/li[7]/text()').extract_first())
+        item['name'] = self.normalWord(sel.xpath('//*[@id="docContent_detail"]//tr[1]/td[3]/text()').extract_first())
+        item['duty'] = self.normalWord(sel.xpath('//*[@id="docContent_detail"]//tr[2]/td[2]/text()').extract_first())
+        item['work'] = self.normalWord(sel.xpath('//*[@id="docContent_detail"]//tr[3]/td[2]/text()').extract_first())
 
         tmp = sel.xpath('//*[@id="docContent_detail"]//tr[4]/td[2]')
-        item['resume'] = tmp.xpath('string(.)').extract_first()
+        item['resume'] = self.normalWord(tmp.xpath('string(.)').extract_first())
 
-        print item['resume']
-
+        # print item['name']
 
         self.cnt += 1
         return item
