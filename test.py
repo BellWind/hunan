@@ -43,7 +43,7 @@ def JsonToTable():
         cur = conn.cursor()
 
         data = []
-        with open('bmlds.json') as f:
+        with open('csxxgk.json') as f:
             for line in f:
                 if(line[0] != "{"):
                     continue
@@ -53,11 +53,14 @@ def JsonToTable():
                 tmp = json.loads(str, strict=False)
                 data.append(tmp)
 
-        id = 791
+        id = 1357
+        ind = 12
         for item in data:
-            sql = "INSERT INTO officer(`id`,`code`,`index`,`name`,`image_url`,`profile`,`organization`,`position`) VALUES "
-            sql = sql + "('%d','%s','%s','%s','%s','%s','%s','%s');\r\n" % (id,'410000',item['index'],item['name'],item['image'],item['profile'],item['organization'],item['position'])
-            id = id + 1
+            img = 'http://ozwyjb3op.bkt.clouddn.com/430100_' + ('%04d')%(ind) + '.jps'
+            sql = "INSERT INTO (`id`,`code`,`index`,`name`,`image_url`,`profile`,`organization`,`position`) VALUES "
+            sql = sql + "('%d','%s','%s','%s','%s','%s','%s','%s');\r\n" % (id,'430100',item['index'],item['name'],img,item['profile'],item['organization'],item['position'])
+            id += 1
+            ind += 1
             cur.execute(sql)
             cur.nextset()
 
