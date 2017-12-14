@@ -24,7 +24,6 @@ class xxgkItem(scrapy.Item):
     resume = Field()                       # 工作简历
 
 class csItem(scrapy.Item):
-    id = Field()
     index = Field()  # 索引号
     org = Field()  # 所属机构
     dep = Field()  # 公开责任部门
